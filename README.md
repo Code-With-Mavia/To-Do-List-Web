@@ -8,6 +8,7 @@
 ![Last Commit](https://img.shields.io/github/last-commit/Code-With-Mavia/To-Do-List-Web)
 ![Made with PHP](https://img.shields.io/badge/Made%20with-PHP-blue)
 
+
 A modern To-Do List Web Application built with core PHP, featuring object-oriented architecture, a clean UI, and robust user authentication.
 
 ---
