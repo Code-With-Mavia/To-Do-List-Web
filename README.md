@@ -1,2 +1,2 @@
 # To-Do-List-Web
-A todolist pp on core php with frontnend and backend 
+A todolist app on core php with frontnend and backend 
