@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Login - Task Manager</title>
+  <link rel="stylesheet" href="Views/css/style.css">
+</head>
+<body class="login-body">
+
+<div class="login-container">
+  <div class="login-card">
+    <div class="logo-wrapper">
+      <img src="Views/logo.jpg" alt="App Logo" class="login-logo">
+      <h2 class="app-title">Welcome Back 👋</h2>
+      <p class="subtitle">Log in to manage your daily tasks efficiently</p>
+    </div>
+
+    <form id="login-form" novalidate>
+      <div class="form-group">
+        <input type="email" name="email" id="email" placeholder="Email address" autocomplete="on">
+        <span id="email-error" class="error-message">Email cannot be empty!</span>
+      </div>
+
+      <div class="form-group">
+        <input type="password" name="password" id="password" placeholder="Password" autocomplete="off">
+        <span id="password-error" class="error-message">Password cannot be empty!</span>
+      </div>
+
+      <span id="login-error" class="error-message">Invalid credentials!</span>
+
+      <button type="submit" class="login-btn">Login</button>
+    </form>
+
+    <div class="footer-text">
+      <p>Don’t have an account? 
+        <a href="index.php?action=signupView" class="link">Sign Up</a></p>
+    </div>
+  </div>
+</div>
+
+<script>
+const form = document.getElementById('login-form');
+const email = document.getElementById('email');
+const password = document.getElementById('password');
+const emailError = document.getElementById('email-error');
+const passwordError = document.getElementById('password-error');
+const loginError = document.getElementById('login-error');
+
+loginError.style.display = 'none';
+
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+  let hasError = false;
+
+  if(email.value.trim() === ""){
+    emailError.style.display = "block";
+    email.classList.add("input-error");
+    hasError = true;
+  } else {
+    emailError.style.display = "none";
+    email.classList.remove("input-error");
+  }
+
+  if(password.value.trim() === ""){
+    passwordError.style.display = "block";
+    password.classList.add("input-error");
+    hasError = true;
+  } else {
+    passwordError.style.display = "none";
+    password.classList.remove("input-error");
+  }
+
+  if(hasError) return;
+
+  const data = new FormData();
+  data.append('email', email.value.trim());
+  data.append('password', password.value.trim());
+
+  try {
+    const res = await fetch('index.php?action=loginUser', { method: 'POST', body: data });
+    const result = await res.json();
+    if(result.status === 'success'){
+      window.location.href = 'index.php?action=tasksView';
+    } else {
+      loginError.textContent = result.message || "Invalid credentials!";
+      loginError.style.display = 'block';
+    }
+  } catch {
+    loginError.textContent = "Server error. Please try again later.";
+    loginError.style.display = 'block';
+  }
+});
+
+email.addEventListener('input', () => {
+  emailError.style.display = 'none';
+  email.classList.remove('input-error');
+  loginError.style.display = 'none';
+});
+
+password.addEventListener('input', () => {
+  passwordError.style.display = 'none';
+  password.classList.remove('input-error');
+  loginError.style.display = 'none';
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>My ToDo List</title>
+  <link rel="stylesheet" href="Views/css/style.css">
+</head>
+<body>
+<div class="container">
+
+  <!-- Top Bar -->
+   <div class="top-bar">
+    <button id="logout-btn" class="logout-btn">Logout</button>
+  </div>
+  <!-- Logo -->
+  <div class="logo-container">
+    <a href="#top" id="logo-link">
+      <img src="Views/logo.jpg" alt="ToDo List Logo" class="logo">
+    </a>
+  </div>
+
+  <!-- Anchor at the top -->
+  <div id="top"></div>
+
+  <h1>My Tasks</h1>
+
+  <!-- 🔹 Color Legend -->
+  <div class="priority-legend">
+    <span class="legend-item high">High Priority</span>
+    <span class="legend-item medium">Medium Priority</span>
+    <span class="legend-item low">Low Priority</span>
+  </div>
+
+  <!-- Add Task Form -->
+  <form id="add-task-form" class="add-form">
+    <input type="text" id="task-title" placeholder="Enter your task" aria-label="Task Title">
+    <select id="task-priority" aria-label="Task Priority">
+      <option value="High">High</option>
+      <option value="Medium" selected>Medium</option>
+      <option value="Low">Low</option>
+    </select>
+    <input type="date" id="task-due" aria-label="Due Date">
+    <button type="submit" class="add-btn">➕ Add Task</button>
+    <span id="title-error" class="error-message">Task field cannot be empty!</span>
+  </form>
+
+  <!-- Filter Form -->
+  <form id="filter-form" class="filter-form">
+    <select id="filter-priority" aria-label="Filter by Priority">
+      <option value="">All Priorities</option>
+      <option value="High">High</option>
+      <option value="Medium">Medium</option>
+      <option value="Low">Low</option>
+    </select>
+    <button type="submit" class="filter-btn">Filter</button>
+  </form>
+
+  <!-- Task List -->
+  <div id="task-list" class="task-list"></div>
+
+  <!-- Pagination -->
+  <div id="pagination" class="pagination">
+    <button id="prev-page" class="page-btn">⟨ Prev</button>
+    <span id="page-info" class="page-info">Page 1</span>
+    <button id="next-page" class="page-btn">Next ⟩</button>
+  </div>
+
+</div>
+
+<script>
+const taskForm = document.getElementById('add-task-form');
+const taskInput = document.getElementById('task-title');
+const taskError = document.getElementById('title-error');
+const filterForm = document.getElementById('filter-form');
+const taskList = document.getElementById('task-list');
+const pageInfo = document.getElementById('page-info');
+const prevPageBtn = document.getElementById('prev-page');
+const nextPageBtn = document.getElementById('next-page');
+
+let allTasks = [];
+let currentPage = 1;
+const tasksPerPage = 6;
+
+// ✅ Load tasks
+async function loadTasks(priority = '') {
+  let url = `index.php?action=getTasks`;
+  if (priority) url += `&priority=${priority}`;
+  const res = await fetch(url);
+  const tasks = await res.json();
+  tasks.sort((a, b) => a.status - b.status);
+  allTasks = tasks;
+  renderPage(currentPage);
+}
+
+// ✅ Render pagination
+function renderPage(page) {
+  const start = (page - 1) * tasksPerPage;
+  const end = start + tasksPerPage;
+  const pageTasks = allTasks.slice(start, end);
+  renderTasks(pageTasks);
+
+  const totalPages = Math.ceil(allTasks.length / tasksPerPage);
+  pageInfo.textContent = `Page ${page} of ${totalPages || 1}`;
+  prevPageBtn.disabled = page <= 1;
+  nextPageBtn.disabled = page >= totalPages;
+}
+
+// ✅ Pagination buttons
+prevPageBtn.addEventListener('click', () => {
+  if (currentPage > 1) {
+    currentPage--;
+    renderPage(currentPage);
+  }
+});
+
+nextPageBtn.addEventListener('click', () => {
+  const totalPages = Math.ceil(allTasks.length / tasksPerPage);
+  if (currentPage < totalPages) {
+    currentPage++;
+    renderPage(currentPage);
+  }
+});
+
+// ✅ Render tasks
+function renderTasks(tasks) {
+  taskList.innerHTML = '';
+  if (tasks.length === 0) {
+    taskList.innerHTML = "<p class='no-tasks'>No tasks found</p>";
+    return;
+  }
+
+  tasks.forEach(task => {
+    const div = document.createElement('div');
+    div.className = `task-card priority-${task.priority.toLowerCase()}`;
+    div.innerHTML = `
+      <div class="task-info">
+        <span class="task-title ${task.status == 1 ? 'done' : ''}">${task.title}</span>
+        <span class="task-meta">${task.due || 'No due date'}</span>
+      </div>
+      <div class="task-actions">
+        <button class="action-btn toggle-btn ${task.status == 1 ? 'done-btn' : 'undone-btn'}"
+                data-id="${task.id}"
+                data-status="${task.status}">
+          ${task.status == 1 ? '✔' : '✖'}
+        </button>
+        <button class="action-btn delete-btn" data-id="${task.id}">🗑</button>
+      </div>`;
+    taskList.appendChild(div);
+  });
+
+  // Toggle Done/Undone
+  document.querySelectorAll('.toggle-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.id;
+      const currentStatus = parseInt(btn.dataset.status);
+      const newStatus = currentStatus === 1 ? 0 : 1;
+
+      const res = await fetch(`index.php?action=toggleTask&id=${id}&done=${newStatus}`);
+      const result = await res.json();
+
+      if (result.success) {
+        btn.dataset.status = newStatus;
+        btn.innerHTML = newStatus === 1 ? '✔' : '✖';
+        btn.classList.toggle('done-btn', newStatus === 1);
+        btn.classList.toggle('undone-btn', newStatus === 0);
+
+        const taskTitle = btn.closest('.task-card').querySelector('.task-title');
+        taskTitle.classList.toggle('done', newStatus === 1);
+        loadTasks(document.getElementById('filter-priority').value);
+      }
+    });
+  });
+
+  // Delete Task
+  document.querySelectorAll('.delete-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      await fetch(`index.php?action=deleteTask&id=${btn.dataset.id}`);
+      loadTasks(document.getElementById('filter-priority').value);
+    });
+  });
+}
+
+// Add Task
+taskForm.addEventListener('submit', async e => {
+  e.preventDefault();
+  if (taskInput.value.trim() === "") {
+    taskError.style.display = 'block';
+    taskInput.classList.add('input-error');
+    return;
+  }
+
+  taskError.style.display = 'none';
+  taskInput.classList.remove('input-error');
+
+  const data = new FormData();
+  data.append('title', taskInput.value.trim());
+  data.append('priority', document.getElementById('task-priority').value);
+  data.append('due', document.getElementById('task-due').value || '');
+
+  const res = await fetch('index.php?action=addTask', { method: 'POST', body: data });
+  const result = await res.json();
+
+  if (result.success) loadTasks();
+  taskInput.value = '';
+  document.getElementById('task-due').value = '';
+});
+
+// Filter by Priority
+filterForm.addEventListener('submit', e => {
+  e.preventDefault();
+  currentPage = 1;
+  loadTasks(document.getElementById('filter-priority').value);
+});
+
+// ✅ Logout (simple redirect to destroy session)
+document.getElementById('logout-btn').addEventListener('click', () => {
+  window.location.href = 'index.php?action=logout';
+});
+
+// ✅ Logo scroll to top
+document.getElementById('logo-link').addEventListener('click', e => {
+  e.preventDefault();
+  document.getElementById('top').scrollIntoView({ behavior: 'smooth' });
+});
+
+// Initial Load
+loadTasks();
+</script>
+</body>
+</html>

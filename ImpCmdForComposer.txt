@@ -1,0 +1,9 @@
+cmd : composer dump-autoload -o
+output :Generating optimized autoload files
+        Generated optimized autoload files containing 4 classes
+
+// command for using the database with the port via mamp 
+        /Applications/MAMP/Library/bin/mysql80/bin/mysql -u root -p -P8889 ToDoList
+
+// to run php on mamp server 
+        - php -S localhost:8000

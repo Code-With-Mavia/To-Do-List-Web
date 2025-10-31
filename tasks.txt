@@ -1,0 +1,12 @@
+today convert it into a nice UI and give it a nice frontend to this to do list app.
+
+our main tasks:
+    - First we will plan how the UI will look . 
+    - Second we will try to apply new user based signup and login(optinonal)
+    - Third we will implement how the tasks will look in the ui as in display and what information will be displayed
+    - Fourth we will display the user how the data gets add using the form one via html
+    - Fifth we will add ticks and unticks marks and save them direct in the dB 
+        and make sure it gets displayed to the user correctly (but default it will be marked undone)
+    - Sixth we will implement how the button for deletion looks and its data will be deleted from the dB
+    - Seventh we will have 2 pages in a panel such that when will be users lists of tasks 
+        and second will be his activity logger so that he can track it (optinonal)

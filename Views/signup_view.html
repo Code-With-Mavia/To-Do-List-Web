@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Sign Up - Task Manager</title>
+  <link rel="stylesheet" href="Views/css/style.css">
+</head>
+<body class="login-body">
+
+<div class="login-container">
+  <div class="login-card">
+    <div class="logo-wrapper">
+      <img src="Views/logo.jpg" alt="App Logo" class="login-logo">
+      <h2 class="app-title">Create Your Account ✨</h2>
+      <p class="subtitle">Sign up to start managing your tasks</p>
+    </div>
+
+    <form id="signup-form" novalidate>
+      <div class="form-group">
+        <input type="text" id="username" placeholder="Username" autocomplete="on">
+        <span id="username-error" class="error-message">Username required!</span>
+      </div>
+      <div class="form-group">
+        <input type="email" id="email" placeholder="Email address" autocomplete="on">
+        <span id="email-error" class="error-message">Email required!</span>
+      </div>
+      <div class="form-group">
+        <input type="password" id="password" placeholder="Password" autocomplete="off">
+        <span id="password-error" class="error-message">Password required!</span>
+      </div>
+
+      <span id="signup-error" class="error-message">Signup failed!</span>
+
+      <button type="submit" class="login-btn">Sign Up</button>
+    </form>
+
+    <div class="footer-text">
+      <p>Already have an account? <a href="index.php" class="link">Login</a></p>
+    </div>
+  </div>
+</div>
+
+<script>
+const form = document.getElementById('signup-form');
+const username = document.getElementById('username');
+const email = document.getElementById('email');
+const password = document.getElementById('password');
+const signupError = document.getElementById('signup-error');
+
+signupError.style.display = 'none';
+
+form.addEventListener('submit', async e => {
+  e.preventDefault();
+
+  if (!username.value.trim() || !email.value.trim() || !password.value.trim()) {
+    signupError.textContent = "All fields are required!";
+    signupError.style.display = "block";
+    return;
+  }
+
+  const data = new FormData();
+  data.append('username', username.value.trim());
+  data.append('email', email.value.trim());
+  data.append('password', password.value.trim());
+
+  try {
+    const res = await fetch('index.php?action=signupUser', { method: 'POST', body: data });
+    const result = await res.json();
+    if(result.status === 'success'){
+      window.location.href = 'index.php?action=tasksView';
+    } else {
+      signupError.textContent = result.message;
+      signupError.style.display = 'block';
+    }
+  } catch {
+    signupError.textContent = 'Server error';
+    signupError.style.display = 'block';
+  }
+});
+</script>
+</body>
+</html>
