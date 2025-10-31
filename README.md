@@ -48,7 +48,6 @@ To-Do List Web is an open-source PHP web app to help users manage daily tasks ef
 ## 📸 Screenshots
 
 ![App Dashboard](Views/logo.jpg)  
-*Add more screenshots as needed, stored in `Views` folder.*
 
 ---
 
