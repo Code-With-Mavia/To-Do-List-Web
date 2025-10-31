@@ -143,15 +143,3 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 > _“Built with ❤️ and PHP for everyday productivity.”_
 
-```
-
-You can copy-paste this file as `README.md` in your project root, and further customize the badges or sections as your project evolves.[1][2][4]
-
-[1](https://www.freecodecamp.org/news/how-to-write-a-good-readme-file/)
-[2](https://www.makeareadme.com)
-[3](https://coding-boot-camp.github.io/full-stack/github/professional-readme-guide/)
-[4](https://github.com/othneildrew/Best-README-Template)
-[5](https://blogs.incyclesoftware.com/readme-files-for-internal-projects)
-[6](https://www.surajon.dev/awesome-readme-examples-for-writing-better-readmes)
-[7](https://www.reddit.com/r/learnprogramming/comments/vxfku6/how_to_write_a_readme/)
-[8](https://www.youtube.com/watch?v=rCt9DatF63I)
