@@ -4,7 +4,6 @@
 ![Forks](https://img.shields.io/github/forks/Code-With-Mavia/To-Do-List-Web?style=social)
 ![Issues](https://img.shields.io/github/issues/Code-With-Mavia/To-Do-List-Web)
 ![Pull Requests](https://img.shields.io/github/issues-pr/Code-With-Mavia/To-Do-List-Web)
-![License](https://img.shields.io/github/license/Code-With-Mavia/To-Do-List-Web)
 ![Last Commit](https://img.shields.io/github/last-commit/Code-With-Mavia/To-Do-List-Web)
 ![Made with PHP](https://img.shields.io/badge/Made%20with-PHP-blue)
 
