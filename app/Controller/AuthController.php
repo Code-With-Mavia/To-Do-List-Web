@@ -43,7 +43,7 @@ class AuthController
                 $this->logout();
                 break;
 
-            case 'signupView': // Show signup form
+            case 'signupView': // Show signup form to the user
                 $this->renderView('signup_view.html');
                 break;
 
