@@ -64,20 +64,16 @@ This project is a robust To-Do List web app showcasing core PHP development with
 ├── autoload.php
 └── composer/
 
-text
-
 ## Installation
 
 1. **Clone the repository**
 git clone https://github.com/Code-With-Mavia/To-Do-List-Web.git
 cd To-Do-List-Web
 
-text
 
 2. **Install dependencies (if any)**
 composer install
 
-text
 *(Requires Composer. See [Composer Setup](https://getcomposer.org/download/))* 
 
 3. **Set up database**
@@ -87,7 +83,6 @@ text
 4. **Start the server**
 php -S localhost:8000
 
-text
 Open [http://localhost:8000](http://localhost:8000) in your browser.
 
 ## Usage
